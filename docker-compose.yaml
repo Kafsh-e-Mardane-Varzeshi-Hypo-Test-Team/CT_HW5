@@ -1,0 +1,77 @@
+services:
+
+  zookeeper:
+    image: zookeeper:3.7
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - hadoop-net
+
+  journalnode:
+    image: cthw5_hadoop:latest
+    hostname: journalnode
+    container_name: journalnode
+    volumes:
+      - journalnode:/hadoop/dfs/journal
+    networks:
+      - hadoop-net
+
+  namenode1:
+    image: cthw5_hadoop:latest
+    hostname: namenode1
+    container_name: namenode1
+    ports:
+      - "9870:9870"
+    volumes:
+      - namenode1:/hadoop/dfs/name
+    depends_on:
+      - zookeeper
+      - journalnode
+    networks:
+      - hadoop-net
+
+  namenode2:
+    image: cthw5_hadoop:latest
+    hostname: namenode2
+    container_name: namenode2
+    volumes:
+      - namenode2:/hadoop/dfs/name
+    depends_on:
+      - zookeeper
+      - journalnode
+    networks:
+      - hadoop-net
+
+  datanode1:
+    image: cthw5_hadoop:latest
+    hostname: datanode1
+    container_name: datanode1
+    volumes:
+      - datanode1:/hadoop/dfs/data
+    depends_on:
+      - namenode1
+    networks:
+      - hadoop-net
+
+  datanode2:
+    image: cthw5_hadoop:latest
+    hostname: datanode2
+    container_name: datanode2
+    volumes:
+      - datanode2:/hadoop/dfs/data
+    depends_on:
+      - namenode1
+    networks:
+      - hadoop-net
+
+networks:
+  hadoop-net:
+
+volumes:
+  namenode1:
+  namenode2:
+  datanode1:
+  datanode2:
+  journalnode:
