@@ -38,7 +38,7 @@
 
 	<property>
 		<name>dfs.namenode.shared.edits.dir</name>
-		<value>qjournal://journalnode:8485</value>
+		<value>qjournal://journalnode:8485/hdfs-cluster</value>
 	</property>
 
 	<property>
