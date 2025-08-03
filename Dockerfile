@@ -1,0 +1,36 @@
+FROM ubuntu:22.04
+
+WORKDIR /root
+
+RUN apt-get update && apt-get install -y openssh-server openjdk-8-jdk curl
+
+ENV HADOOP_VERSION=3.3.6
+RUN curl -fSL https://dlcdn.apache.org/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz -o /hadoop.tar.gz && \
+	tar -xvf /hadoop.tar.gz -C / && \
+	mv /hadoop-$HADOOP_VERSION /hadoop && \
+	rm /hadoop.tar.gz
+
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-arm64
+ENV HADOOP_HOME=/hadoop
+ENV PATH=$PATH:/hadoop/bin:/hadoop/sbin
+
+RUN ssh-keygen -t rsa -f ~/.ssh/id_rsa -P '' && \
+    cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+
+RUN mkdir -p /hadoop/dfs/name && \
+	mkdir -p /hadoop/dfs/data && \
+	mkdir -p /hadoop/dfs/journal
+
+COPY config/* /tmp/
+RUN mv /tmp/hadoop-env.sh /hadoop/etc/hadoop/hadoop-env.sh && \
+	mv /tmp/core-site.xml /hadoop/etc/hadoop/core-site.xml && \
+	mv /tmp/hdfs-site.xml /hadoop/etc/hadoop/hdfs-site.xml && \
+	mv /tmp/workers /hadoop/etc/hadoop/workers
+
+ADD init-hdfs-ha.sh /init-hdfs-ha.sh
+
+RUN chmod +x /init-hdfs-ha.sh && \
+	chmod +x /hadoop/sbin/start-dfs.sh
+
+CMD [ "sh", "-c", "service ssh start; bash"]
+
