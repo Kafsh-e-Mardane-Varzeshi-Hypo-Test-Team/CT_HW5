@@ -8,6 +8,8 @@ services:
       - "2181:2181"
     networks:
       - hadoop-net
+    stdin_open: true
+    tty: true
 
   journalnode:
     image: cthw5_hadoop:latest
@@ -15,6 +17,8 @@ services:
     container_name: journalnode
     volumes:
       - journalnode:/hadoop/dfs/journal
+    stdin_open: true
+    tty: true
     networks:
       - hadoop-net
 
@@ -31,6 +35,8 @@ services:
       - journalnode
     networks:
       - hadoop-net
+    stdin_open: true
+    tty: true
 
   namenode2:
     image: cthw5_hadoop:latest
@@ -43,6 +49,8 @@ services:
       - journalnode
     networks:
       - hadoop-net
+    stdin_open: true
+    tty: true
 
   datanode1:
     image: cthw5_hadoop:latest
@@ -54,6 +62,8 @@ services:
       - namenode1
     networks:
       - hadoop-net
+    stdin_open: true
+    tty: true
 
   datanode2:
     image: cthw5_hadoop:latest
@@ -65,6 +75,8 @@ services:
       - namenode1
     networks:
       - hadoop-net
+    stdin_open: true
+    tty: true
 
 networks:
   hadoop-net:
