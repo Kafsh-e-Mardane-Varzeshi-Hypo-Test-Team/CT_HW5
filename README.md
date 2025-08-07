@@ -93,17 +93,13 @@ docker exec -it namenode1 bash
 <div dir="ltr" style="text-align: left; font-family: 'Tahoma', 'Arial', sans-serif;">
 
 ```bash
-# ایجاد دایرکتوری در HDFS
-hdfs dfs -mkdir -p hdfs://hdfs-cluster/data
+hdfs dfs -mkdir -p hdfs://hdfs-cluster/data # ایجاد دایرکتوری در HDFS
 
-# بارگذاری فایل محلی به HDFS
-hdfs dfs -put /path/to/local/file hdfs://hdfs-cluster/data/input.txt
+hdfs dfs -put /path/to/local/file hdfs://hdfs-cluster/data/input.txt # بارگذاری فایل محلی به HDFS
 
-# مشاهده محتویات HDFS
-hdfs dfs -ls hdfs://hdfs-cluster/data
+hdfs dfs -ls hdfs://hdfs-cluster/data # مشاهده محتویات HDFS
 
-# مشاهده محتوای فایل
-hdfs dfs -cat hdfs://hdfs-cluster/data/input.txt
+hdfs dfs -cat hdfs://hdfs-cluster/data/input.txt # مشاهده محتوای فایل
 ```
 </div>
 
@@ -116,8 +112,8 @@ hdfs dfs -cat hdfs://hdfs-cluster/data/input.txt
 CT_HW5/
 ├── docker-compose.yaml          # تنظیمات Docker Compose
 └── hdfs-cluster/                # تنظیمات HDFS
-    ├── config/                  # فایل‌های پیکربندی
-    ├── Dockerfile               # تصویر Docker
+    ├── config/                  # فایل‌های config
+    ├── Dockerfile               # Docker image
     └── scripts/                 # اسکریپت‌های راه‌اندازی
 ```
 
