@@ -14,7 +14,7 @@ services:
       - hdfs-network
 
   journalnode:
-    build: .
+    build: ./hdfs-cluster
     container_name: journalnode
     hostname: journalnode
     ports:
@@ -28,7 +28,7 @@ services:
       - hdfs-network
 
   namenode1:
-    build: .
+    build: ./hdfs-cluster
     container_name: namenode1
     hostname: namenode1
     ports:
@@ -44,7 +44,7 @@ services:
       - hdfs-network
 
   namenode2:
-    build: .
+    build: ./hdfs-cluster
     container_name: namenode2
     hostname: namenode2
     ports:
@@ -60,7 +60,7 @@ services:
       - hdfs-network
 
   datanode1:
-    build: .
+    build: ./hdfs-cluster
     container_name: datanode1
     hostname: datanode1
     volumes:
@@ -73,7 +73,7 @@ services:
       - hdfs-network
 
   datanode2:
-    build: .
+    build: ./hdfs-cluster
     container_name: datanode2
     hostname: datanode2
     volumes:
