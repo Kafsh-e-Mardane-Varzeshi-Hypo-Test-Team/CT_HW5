@@ -1,8 +1,8 @@
-FROM ubuntu:22.04
+FROM openjdk:8-jdk
 
 WORKDIR /root
 
-RUN apt-get update && apt-get install -y openssh-server openjdk-8-jdk curl
+RUN apt-get update && apt-get install -y openssh-server curl
 
 ENV HADOOP_VERSION=3.3.6
 RUN curl -fSL https://dlcdn.apache.org/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz -o /hadoop.tar.gz && \
@@ -10,7 +10,6 @@ RUN curl -fSL https://dlcdn.apache.org/hadoop/common/hadoop-$HADOOP_VERSION/hado
 	mv /hadoop-$HADOOP_VERSION /hadoop && \
 	rm /hadoop.tar.gz
 
-ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-arm64
 ENV HADOOP_HOME=/hadoop
 ENV PATH=$PATH:/hadoop/bin:/hadoop/sbin
 
