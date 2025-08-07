@@ -26,10 +26,10 @@ RUN mv /tmp/hadoop-env.sh /hadoop/etc/hadoop/hadoop-env.sh && \
 	mv /tmp/hdfs-site.xml /hadoop/etc/hadoop/hdfs-site.xml && \
 	mv /tmp/workers /hadoop/etc/hadoop/workers
 
-ADD init-journalnode.sh /init-journalnode.sh
-ADD init-namenode1.sh /init-namenode1.sh
-ADD init-namenode2.sh /init-namenode2.sh
-ADD init-datanode.sh /init-datanode.sh
+ADD scripts/init-journalnode.sh /init-journalnode.sh
+ADD scripts/init-namenode1.sh /init-namenode1.sh
+ADD scripts/init-namenode2.sh /init-namenode2.sh
+ADD scripts/init-datanode.sh /init-datanode.sh
 
 RUN chmod +x /init-journalnode.sh && \
 	chmod +x /init-namenode1.sh && \
