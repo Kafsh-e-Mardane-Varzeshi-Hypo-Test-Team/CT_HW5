@@ -19,13 +19,11 @@ services:
     hostname: journalnode
     ports:
       - "8485:8485"
-    environment:
-      - HADOOP_ROLE=journalnode
     volumes:
       - journalnode_data:/hadoop/dfs/journal
     depends_on:
       - zookeeper
-    command: ["/init-hdfs-ha.sh"]
+    command: ["/init-journalnode.sh"]
     networks:
       - hdfs-network
 
@@ -36,14 +34,12 @@ services:
     ports:
       - "9870:9870"
       - "8020:8020"
-    environment:
-      - HADOOP_ROLE=namenode1
     volumes:
       - namenode1_data:/hadoop/dfs/name
     depends_on:
       - zookeeper
       - journalnode
-    command: ["/init-hdfs-ha.sh"]
+    command: ["/init-namenode1.sh"]
     networks:
       - hdfs-network
 
@@ -53,15 +49,13 @@ services:
     hostname: namenode2
     ports:
       - "9871:9870"
-    environment:
-      - HADOOP_ROLE=namenode2
     volumes:
       - namenode2_data:/hadoop/dfs/name
     depends_on:
       - zookeeper
       - journalnode
       - namenode1
-    command: ["/init-hdfs-ha.sh"]
+    command: ["/init-namenode2.sh"]
     networks:
       - hdfs-network
 
@@ -69,14 +63,12 @@ services:
     build: .
     container_name: datanode1
     hostname: datanode1
-    environment:
-      - HADOOP_ROLE=datanode
     volumes:
       - datanode1_data:/hadoop/dfs/data
     depends_on:
       - namenode1
       - namenode2
-    command: ["/init-hdfs-ha.sh"]
+    command: ["/init-datanode.sh"]
     networks:
       - hdfs-network
 
@@ -84,14 +76,12 @@ services:
     build: .
     container_name: datanode2
     hostname: datanode2
-    environment:
-      - HADOOP_ROLE=datanode
     volumes:
       - datanode2_data:/hadoop/dfs/data
     depends_on:
       - namenode1
       - namenode2
-    command: ["/init-hdfs-ha.sh"]
+    command: ["/init-datanode.sh"]
     networks:
       - hdfs-network
 

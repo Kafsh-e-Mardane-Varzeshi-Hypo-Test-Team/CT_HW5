@@ -26,10 +26,16 @@ RUN mv /tmp/hadoop-env.sh /hadoop/etc/hadoop/hadoop-env.sh && \
 	mv /tmp/hdfs-site.xml /hadoop/etc/hadoop/hdfs-site.xml && \
 	mv /tmp/workers /hadoop/etc/hadoop/workers
 
-ADD init-hdfs-ha.sh /init-hdfs-ha.sh
+ADD init-journalnode.sh /init-journalnode.sh
+ADD init-namenode1.sh /init-namenode1.sh
+ADD init-namenode2.sh /init-namenode2.sh
+ADD init-datanode.sh /init-datanode.sh
 
-RUN chmod +x /init-hdfs-ha.sh && \
+RUN chmod +x /init-journalnode.sh && \
+	chmod +x /init-namenode1.sh && \
+	chmod +x /init-namenode2.sh && \
+	chmod +x /init-datanode.sh && \
 	chmod +x /hadoop/sbin/start-dfs.sh
 
-CMD [ "sh", "-c", "service ssh start; bash"]
+CMD ["bash"]
 
