@@ -105,6 +105,40 @@ hdfs dfs -cat hdfs://hdfs-cluster/data/input.txt # مشاهده محتوای ف�
 
 <div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
 
+برای مثال، برای بارگذاری فایل‌های موردنیاز بخش تحلیل به hdfs، بعد از وارد شدن به یکی از کانتینرهای NameNode، دستورات زیر را وارد می‌کنیم:
+
+</div>
+
+```bash
+curl -L -o <filename> <URL> # دانلود فایل
+
+hdfs dfs -mkdir -p hdfs://hdfs-cluster/data/taxi # ساخت دایرکتوری در hdfs
+
+hdfs dfs -put <filename> hdfs://hdfs-cluster/data/taxi/<filename> # بارگذاری فایل در hdfs
+```
+
+<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
+
+که برای راحتی کار می‌توان از اسکریپت download_and_upload.sh استفاده کرد:
+- دانلود و بارگذاری فایل taxi_zone_lookup.csv:
+</div>
+
+```bash
+./download_and_upload.sh https://d37ci6vzurychx.cloudfront.net/misc/taxi_zone_lookup.csv
+```
+
+
+<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
+
+- دانلود و بارگذاری فایل yellow_tripdata_&lt;date&gt;.parquet:
+</div>
+
+```bash
+./download_and_upload.sh https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-02.parquet # تاریخ را در صورت نیاز تغییر دهید
+```
+
+<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
+
 ## ساختار پروژه
 </div>
 
