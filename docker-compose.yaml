@@ -85,6 +85,19 @@ services:
     networks:
       - hdfs-network
 
+  spark-client:
+    build: ./spark-client
+    container_name: spark-client
+    hostname: spark-client
+    volumes:
+      - ./spark-client/jars:/job-jars
+    depends_on:
+      - namenode1
+    networks:
+      - hdfs-network
+    tty: true
+
+
 volumes:
   zookeeper_data:
   journalnode_data:

@@ -125,6 +125,29 @@ hdfs dfs -cat hdfs://hdfs-cluster/data/input.txt # مشاهده محتوای ف�
 
 <div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
 
+### ۵. بارگذاری فایل‌های jar
+ابتدا در spark-jobs جاب‌ها را تعریف کنید.
+فایل‌های jar را بسازید و آن‌ها را در پوشه `spark-client/jars` قرار دهید:
+```bash
+cd spark-jobs
+mvn clean package
+cp q*/target/*.jar ../spark-client/jars
+```
+
+### ۶. اجرای فایل jar
+با انتخاب `qn` دلخواه می‌توان خروجی سوال شماره `n` را مشاهده کرد.
+```bash
+docker exec -it spark-client ./bin/spark-submit /job-jars/q1-0.1.jar
+```
+
+### ۷. بررسیی خروجی
+با بررسی پوشه 
+`/output`
+ در `http://localhost:9870` و یا اجرای دستور زیر:
+```bash
+docker exec namenode1 hdfs dfs -ls /output
+```
+
 ## ساختار پروژه
 </div>
 
