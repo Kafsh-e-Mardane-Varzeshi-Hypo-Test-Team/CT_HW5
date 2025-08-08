@@ -125,39 +125,68 @@ hdfs dfs -cat hdfs://hdfs-cluster/data/input.txt # مشاهده محتوای ف�
 
 <div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
 
-### ۵. بارگذاری فایل‌های jar
-ابتدا در spark-jobs جاب‌ها را تعریف کنید.
-فایل‌های jar را بسازید و آن‌ها را در پوشه `spark-client/jars` قرار دهید:
+### ۵. بارگذاری فایل‌های JAR
+
+ابتدا وارد پوشه `spark-jobs` شوید و جاب‌های مورد نظر را تعریف کنید. سپس با استفاده از Maven فایل‌های JAR را بسازید و آن‌ها را در پوشه `spark-client/jars` قرار دهید:
+
+</div>
+
 ```bash
 cd spark-jobs
 mvn clean package
 cp q*/target/*.jar ../spark-client/jars
 ```
 
-### ۶. اجرای فایل jar
-با انتخاب `qn` دلخواه می‌توان خروجی سوال شماره `n` را مشاهده کرد.
+<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
+
+### ۶. اجرای فایل JAR
+
+برای اجرای یک جاب، کافی است شماره سوال (`n`) را انتخاب کرده و فایل JAR مربوطه را با Spark Submit اجرا کنید:
+
+</div>
+
 ```bash
 docker exec -it spark-client ./bin/spark-submit /job-jars/q1-0.1.jar
 ```
 
-### ۷. بررسیی خروجی
-با بررسی پوشه 
-`/output`
- در `http://localhost:9870` و یا اجرای دستور زیر:
+<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
+
+### ۷. بررسی خروجی
+
+برای مشاهده خروجی، می‌توانید پوشه `/output` را در رابط کاربری HDFS در آدرس `http://localhost:9870` بررسی کنید یا از دستور زیر استفاده نمایید:
+
+</div>
+
 ```bash
 docker exec namenode1 hdfs dfs -ls /output
 ```
+
 
 ## ساختار پروژه
 </div>
 
 ```
 CT_HW5/
-├── docker-compose.yaml          # تنظیمات Docker Compose
-└── hdfs-cluster/                # تنظیمات HDFS
-    ├── config/                  # فایل‌های config
-    ├── Dockerfile               # Docker image
-    └── scripts/                 # اسکریپت‌های راه‌اندازی
+├── docker-compose.yaml          # تنظیمات Docker Compose برای اجرای کل خوشه
+├── hdfs_upload.sh               # اسکریپت بارگذاری فایل‌ها به HDFS
+│
+├── hdfs-cluster/                # پیکربندی و ساخت ایمیج‌های HDFS
+│   ├── config/                   # فایل‌های تنظیمات HDFS و Hadoop
+│   ├── scripts/                  # اسکریپت‌های راه‌اندازی سرویس‌ها
+│   └── Dockerfile                # Dockerfile برای ساخت سرویس‌های HDFS
+│
+├── spark-client/                 # کلاینت Spark برای اجرای جاب‌ها
+│   ├── config/                   # تنظیمات اتصال Spark به HDFS
+│   └── Dockerfile                # Dockerfile برای Spark Client
+│
+├── spark-jobs/                   # کد جاب‌های Spark
+│   ├── pom.xml                   # تنظیمات Maven پروژه کلی
+│   ├── q1/                       # تحلیل 1
+│   ├── q2/                       # تحلیل 2
+│   ├── q3/                       # تحلیل 3
+│   └── q4/                       # تحلیل 4
+│
+└── spark-outputs/                # خروجی جاب‌های Spark در فرمت Parquet
 ```
 
 <div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
