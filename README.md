@@ -105,21 +105,7 @@ hdfs dfs -cat hdfs://hdfs-cluster/data/input.txt # مشاهده محتوای ف�
 
 <div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
 
-برای مثال، برای بارگذاری فایل‌های موردنیاز بخش تحلیل به hdfs، بعد از وارد شدن به یکی از کانتینرهای NameNode، دستورات زیر را وارد می‌کنیم:
-
-</div>
-
-```bash
-curl -L -o <filename> <URL> # دانلود فایل
-
-hdfs dfs -mkdir -p hdfs://hdfs-cluster/data/taxi # ساخت دایرکتوری در hdfs
-
-hdfs dfs -put <filename> hdfs://hdfs-cluster/data/taxi/<filename> # بارگذاری فایل در hdfs
-```
-
-<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
-
-که برای راحتی کار می‌توان از اسکریپت download_and_upload.sh استفاده کرد:
+با استفاده از اسکریپت download_and_upload.sh، به راحتی می‌توان فایل‌های مورد نیاز تمرین را دانلود و به مسیر مورد نظر در HDFS منتقل کرد:
 - دانلود و بارگذاری فایل taxi_zone_lookup.csv:
 </div>
 
