@@ -105,12 +105,12 @@ hdfs dfs -cat hdfs://hdfs-cluster/data/input.txt # مشاهده محتوای ف�
 
 <div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
 
-با استفاده از اسکریپت download_and_upload.sh، به راحتی می‌توان فایل‌های مورد نیاز تمرین را دانلود و به مسیر مورد نظر در HDFS منتقل کرد:
+با استفاده از اسکریپت hdfs_upload.sh، به راحتی می‌توان فایل‌های مورد نیاز تمرین را دانلود و به مسیر مورد نظر در HDFS منتقل کرد:
 - دانلود و بارگذاری فایل taxi_zone_lookup.csv:
 </div>
 
 ```bash
-./download_and_upload.sh https://d37ci6vzurychx.cloudfront.net/misc/taxi_zone_lookup.csv
+./hdfs_upload.sh https://d37ci6vzurychx.cloudfront.net/misc/taxi_zone_lookup.csv
 ```
 
 
@@ -120,7 +120,7 @@ hdfs dfs -cat hdfs://hdfs-cluster/data/input.txt # مشاهده محتوای ف�
 </div>
 
 ```bash
-./download_and_upload.sh https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-02.parquet # تاریخ را در صورت نیاز تغییر دهید
+./hdfs_upload.sh https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-02.parquet # تاریخ را در صورت نیاز تغییر دهید
 ```
 
 <div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
