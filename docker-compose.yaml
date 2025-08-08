@@ -1,0 +1,98 @@
+services:
+  zookeeper:
+    image: zookeeper:3.8.4
+    container_name: zookeeper
+    hostname: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      - ZOO_MY_ID=1
+      - ZOO_SERVERS=server.1=zookeeper:2888:3888;2181
+    volumes:
+      - zookeeper_data:/data
+    networks:
+      - hdfs-network
+
+  journalnode:
+    build: ./hdfs-cluster
+    container_name: journalnode
+    hostname: journalnode
+    ports:
+      - "8485:8485"
+    volumes:
+      - journalnode_data:/hadoop/dfs/journal
+    depends_on:
+      - zookeeper
+    command: ["/init-journalnode.sh"]
+    networks:
+      - hdfs-network
+
+  namenode1:
+    build: ./hdfs-cluster
+    container_name: namenode1
+    hostname: namenode1
+    ports:
+      - "9870:9870"
+      - "8020:8020"
+    volumes:
+      - namenode1_data:/hadoop/dfs/name
+    depends_on:
+      - zookeeper
+      - journalnode
+    command: ["/init-namenode1.sh"]
+    networks:
+      - hdfs-network
+
+  namenode2:
+    build: ./hdfs-cluster
+    container_name: namenode2
+    hostname: namenode2
+    ports:
+      - "9871:9870"
+    volumes:
+      - namenode2_data:/hadoop/dfs/name
+    depends_on:
+      - zookeeper
+      - journalnode
+      - namenode1
+    command: ["/init-namenode2.sh"]
+    networks:
+      - hdfs-network
+
+  datanode1:
+    build: ./hdfs-cluster
+    container_name: datanode1
+    hostname: datanode1
+    volumes:
+      - datanode1_data:/hadoop/dfs/data
+    depends_on:
+      - namenode1
+      - namenode2
+    command: ["/init-datanode.sh"]
+    networks:
+      - hdfs-network
+
+  datanode2:
+    build: ./hdfs-cluster
+    container_name: datanode2
+    hostname: datanode2
+    volumes:
+      - datanode2_data:/hadoop/dfs/data
+    depends_on:
+      - namenode1
+      - namenode2
+    command: ["/init-datanode.sh"]
+    networks:
+      - hdfs-network
+
+volumes:
+  zookeeper_data:
+  journalnode_data:
+  namenode1_data:
+  namenode2_data:
+  datanode1_data:
+  datanode2_data:
+
+networks:
+  hdfs-network:
+    driver: bridge 
