@@ -24,7 +24,6 @@
         <module>q2</module>
         <module>q3</module>
         <module>q4</module>
-        <module>q5</module>
     </modules>
 
     <dependencyManagement>
