@@ -1,135 +1,78 @@
-# پروژه HDFS Cluster با Docker Compose
+# HDFS Cluster with Docker Compose
 
-<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
+A high-availability HDFS cluster managed with Docker Compose.  The project provides a local distributed data-processing environment with HDFS storage and Apache Spark for executing data-processing jobs.
 
-## معرفی پروژه
+## Architecture
+The cluster includes two NameNodes, two DataNodes, one JournalNode, and one ZooKeeper instance for failover management and active NameNode election. 
 
-این پروژه شامل یک خوشه HDFS (Hadoop Distributed File System) با قابلیت High Availability است که با استفاده از Docker Compose پیاده‌سازی شده است. این خوشه شامل دو NameNode، دو DataNode، یک JournalNode و یک Zookeeper برای مدیریت failover است.
+| Component | Role | Port |
+|---|---|---|
+| ZooKeeper | Failover management and NameNode election | 2181 |
+| JournalNode | Stores HDFS metadata changes | 8485 |
+| NameNode1 / NameNode2 | One active and one standby NameNode | 9870 / 9871 |
+| DataNode1 / DataNode2 | HDFS data storage | — |
 
-## معماری سیستم
-</div>
-
-- **Zookeeper**: برای مدیریت failover و انتخاب NameNode فعال 
-- **JournalNode**: برای نگهداری metadata تغییرات
-- **NameNode1**: NameNode اصلی (Active)
-- **NameNode2**: NameNode پشتیبان (Standby)
-- **DataNode1 & DataNode2**: گره‌های ذخیره‌سازی داده
-
-<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
-
-## پیش‌نیازها
-</div>
-
+## Prerequisites
 
 - Docker
 - Docker Compose
 
-<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
-
-## مراحل راه‌اندازی
-
-### ۱. راه‌اندازی خوشه HDFS
-
-برای شروع خوشه HDFS، دستور زیر را اجرا کنید:
-</div>
+## Start the Cluster
 
 ```bash
 docker compose up -d
 ```
 
-<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
-
-**مراحل انجام شده:**
-1. ابتدا Zookeeper راه‌اندازی می‌شود
-2. سپس JournalNode برای نگهداری metadata شروع می‌شود
-3. پس از آن NameNode1 به عنوان NameNode اصلی راه‌اندازی می‌شود
-4. سپس NameNode2 به عنوان NameNode پشتیبان راه‌اندازی می‌شود
-5. در آخر دو DataNode برای ذخیره‌سازی داده‌ها راه‌اندازی می‌شوند
-
-### ۲. بررسی وضعیت سرویس‌ها
-
-برای مشاهده وضعیت تمام کانتینرها:
-</div>
+Check container status:
 
 ```bash
 docker compose ps
 ```
 
-<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
-
-برای مشاهده لاگ‌های سرویس‌ها:
-</div>
+View logs:
 
 ```bash
-docker-compose logs -f
+docker compose logs -f
 ```
 
-<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
+## Access the HDFS Web UI
 
-### ۳. دسترسی به رابط کاربری HDFS
-</div>
+- NameNode1 Active: http://localhost:9870
+- NameNode2 Standby: http://localhost:9871
 
+## Work with HDFS
 
-- **NameNode1 (Active)**: http://localhost:9870
-- **NameNode2 (Standby)**: http://localhost:9871
-
-<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
-
-### ۴. بارگذاری فایل‌ها به HDFS
-
-برای بارگذاری فایل‌ها به HDFS، ابتدا وارد یکی از کانتینرهای NameNode شوید:
-</div>
+Enter the NameNode container:
 
 ```bash
 docker exec -it namenode1 bash
 ```
 
-<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
-
-سپس فایل‌های مورد نظر را بارگذاری کنید:
-
-</div>
-
-<div dir="ltr" style="text-align: left; font-family: 'Tahoma', 'Arial', sans-serif;">
+Common HDFS commands:
 
 ```bash
-hdfs dfs -mkdir -p hdfs://hdfs-cluster/data # ایجاد دایرکتوری در HDFS
-
-hdfs dfs -put /path/to/local/file hdfs://hdfs-cluster/data/input.txt # بارگذاری فایل محلی به HDFS
-
-hdfs dfs -ls hdfs://hdfs-cluster/data # مشاهده محتویات HDFS
-
-hdfs dfs -cat hdfs://hdfs-cluster/data/input.txt # مشاهده محتوای فایل
+hdfs dfs -mkdir -p hdfs://hdfs-cluster/data
+hdfs dfs -put /path/to/local/file hdfs://hdfs-cluster/data/input.txt
+hdfs dfs -ls hdfs://hdfs-cluster/data
+hdfs dfs -cat hdfs://hdfs-cluster/data/input.txt
 ```
-</div>
 
-<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
+Upload datasets with the helper script from the project root:
 
-با استفاده از اسکریپت hdfs_upload.sh، به راحتی می‌توان فایل‌های مورد نیاز تمرین را دانلود و به مسیر مورد نظر در HDFS منتقل کرد:
-- دانلود و بارگذاری فایل taxi_zone_lookup.csv:
-</div>
+```bash
+./hdfs_upload.sh <source-url>
+```
+
+Examples:
 
 ```bash
 ./hdfs_upload.sh https://d37ci6vzurychx.cloudfront.net/misc/taxi_zone_lookup.csv
+./hdfs_upload.sh https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-02.parquet
 ```
 
+## Build Spark Jobs
 
-<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
-
-- دانلود و بارگذاری فایل yellow_tripdata_&lt;date&gt;.parquet:
-</div>
-
-```bash
-./hdfs_upload.sh https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-02.parquet # تاریخ را در صورت نیاز تغییر دهید
-```
-
-<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
-
-### ۵. بارگذاری فایل‌های JAR
-
-ابتدا وارد پوشه `spark-jobs` شوید و جاب‌های مورد نظر را تعریف کنید. سپس با استفاده از Maven فایل‌های JAR را بسازید و آن‌ها را در پوشه `spark-client/jars` قرار دهید:
-
-</div>
+Build the JAR files and place them in the Spark client directory:
 
 ```bash
 cd spark-jobs
@@ -137,65 +80,60 @@ mvn clean package
 cp q*/target/*.jar ../spark-client/jars
 ```
 
-<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
-
-### ۶. اجرای فایل JAR
-
-برای اجرای یک جاب، کافی است شماره سوال (`n`) را انتخاب کرده و فایل JAR مربوطه را با Spark Submit اجرا کنید:
-
-</div>
+## Run a Spark Job
 
 ```bash
 docker exec -it spark-client ./bin/spark-submit /job-jars/q1-0.1.jar
 ```
 
-<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
+Replace `q1` with the desired job, for example `q2`, `q3`, or `q4`.
 
-### ۷. بررسی خروجی
+## Check Output
 
-برای مشاهده خروجی، می‌توانید پوشه `/output` را در رابط کاربری HDFS در آدرس `http://localhost:9870` بررسی کنید یا از دستور زیر استفاده نمایید:
-
-</div>
+View output in the HDFS Web UI at http://localhost:9870 under `/output`, or run:
 
 ```bash
 docker exec namenode1 hdfs dfs -ls /output
 ```
 
+## Project Structure
 
-## ساختار پروژه
-</div>
-
-```
-CT_HW5/
-├── docker-compose.yaml          # تنظیمات Docker Compose برای اجرای کل خوشه
-├── hdfs_upload.sh               # اسکریپت بارگذاری فایل‌ها به HDFS
-│
-├── hdfs-cluster/                # پیکربندی و ساخت ایمیج‌های HDFS
-│   ├── config/                   # فایل‌های تنظیمات HDFS و Hadoop
-│   ├── scripts/                  # اسکریپت‌های راه‌اندازی سرویس‌ها
-│   └── Dockerfile                # Dockerfile برای ساخت سرویس‌های HDFS
-│
-├── spark-client/                 # کلاینت Spark برای اجرای جاب‌ها
-│   ├── config/                   # تنظیمات اتصال Spark به HDFS
-│   └── Dockerfile                # Dockerfile برای Spark Client
-│
-├── spark-jobs/                   # کد جاب‌های Spark
-│   ├── pom.xml                   # تنظیمات Maven پروژه کلی
-│   ├── q1/                       # تحلیل 1
-│   ├── q2/                       # تحلیل 2
-│   ├── q3/                       # تحلیل 3
-│   └── q4/                       # تحلیل 4
-│
-└── spark-outputs/                # خروجی جاب‌های Spark در فرمت Parquet
+```text
+.
+├── docker-compose.yaml
+├── hdfs_upload.sh
+├── hdfs-cluster/
+│   ├── config/
+│   ├── scripts/
+│   └── Dockerfile
+├── spark-client/
+│   ├── config/
+│   └── Dockerfile
+├── spark-jobs/
+│   ├── pom.xml
+│   ├── q1/
+│   ├── q2/
+│   ├── q3/
+│   └── q4/
+└── spark-outputs/
 ```
 
-<div dir="rtl" style="text-align: right; font-family: 'Tahoma', 'Arial', sans-serif;">
+## Cleanup
 
-## نکات مهم
+Stop the cluster:
 
-- تمام داده‌ها در volume های Docker ذخیره می‌شوند
-- برای حذف کامل داده‌ها از دستور `docker-compose down -v` استفاده کنید
-- پورت‌های 9870 و 9871 برای دسترسی به رابط کاربری HDFS استفاده می‌شوند
-- پورت 2181 برای Zookeeper و پورت 8485 برای JournalNode استفاده می‌شود
+```bash
+docker compose down
+```
 
-</div>
+Stop the cluster and remove all volumes, including HDFS data:
+
+```bash
+docker compose down -v
+```
+
+## Notes
+
+- Data is persisted in Docker volumes.
+- Use `docker compose down -v` only when you want to delete all cluster data.
+- Use `docker compose` commands for Docker Compose V2.
